@@ -11,8 +11,8 @@ on:
 jobs:
   build:
     env:
-      SHOPIFY_DOMAIN: ${{ variables.SHOPIFY_DOMAIN }}
-      SHOPIFY_STOREFRONT_ACCESS_TOKEN: ${{ variables.SHOPIFY_STOREFRONT_ACCESS_TOKEN }}
+      SHOPIFY_DOMAIN: ${{ vars.SHOPIFY_DOMAIN }}
+      SHOPIFY_STOREFRONT_ACCESS_TOKEN: ${{ vars.SHOPIFY_STOREFRONT_ACCESS_TOKEN }}
     runs-on: ubuntu-latest
 
     steps:
