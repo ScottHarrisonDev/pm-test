@@ -1,0 +1,18 @@
+---
+import Hero from '../components/Hero.astro';
+import ProductList from '../components/ProductList.astro';
+import Layout from '../layouts/Layout.astro';
+import { getAllProducts } from '../services/shopify/Shopify';
+
+const allProducts = await getAllProducts();
+---
+
+<Layout>
+	<Hero>
+		<h1 class="text-4xl mb-4">Products</h1>
+		<p>View all of our products</p>
+	</Hero>
+	<section class="py-8">
+		<ProductList products={allProducts} />
+	</section>
+</Layout>

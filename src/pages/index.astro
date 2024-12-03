@@ -1,0 +1,21 @@
+---
+import Hero from '../components/Hero.astro';
+import ProductList from '../components/ProductList.astro';
+import Layout from '../layouts/Layout.astro';
+import { getMostRecentProducts } from '../services/shopify/Shopify';
+
+const recentProducts = await getMostRecentProducts(3);
+---
+
+<Layout>
+	<!-- Demonstrating Slot based approach to components, gives more flexibility for dynamic content -->
+	<Hero>
+		<h1 class="text-4xl mb-4">Welcome to Test Store</h1>
+		<p class="max-w-[800px]">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean sodales arcu quis metus accumsan, id mattis neque scelerisque. Sed sit amet ligula quis nunc pellentesque lacinia. Phasellus dignissim ex quis velit suscipit egestas. Nullam euismod risus sed diam iaculis vestibulum.</p>
+	</Hero>
+	<section class="p-8">
+		<h2 class="text-2xl mb-4">New Arrivals</h2>
+		<!-- Demonstrating prop based approach to components, ideal for specific but reusable use cases -->
+		<ProductList products={recentProducts} />
+	</section>
+</Layout>

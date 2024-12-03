@@ -1,0 +1,39 @@
+---
+import { getActiveVariant, getCurrencySymbolFromCode } from "../utilities/commerce";
+import { getTagsToDisplay } from "../utilities/ui";
+
+const {
+  product: {
+    title,
+    featuredImage,
+    handle,
+    tags,
+    variants
+  }
+} = Astro.props;
+
+const activeVariant = getActiveVariant(variants);
+const currencySymbol = getCurrencySymbolFromCode(activeVariant.price.currencyCode);
+const displayTags = getTagsToDisplay(tags);
+---
+<div class="ProductCard max-w-[400px] min-w-[250px] bg-gray-800 p-2 text-white">
+  <div class="ProductCard__media relative">
+    { displayTags &&
+      <ul class="ProductCard__tags absolute top-0 right-0 flex gap-2 p-2">
+        { displayTags.map(tag => 
+          <li class="ProductCard__tag bg-red-400 rounded px-2 py-0">{tag}</li>
+        )}
+      </ul>
+    }
+    <div class="ProductCard__price absolute bottom-0 p-2 text-gray-800">
+      {currencySymbol}{activeVariant.price.amount}
+    </div>
+    { featuredImage &&
+      <img class="h-[485px]" src={featuredImage.url} />
+    }
+  </div>
+  <div class="ProductCard__caption py-2">
+    <p class="font-bold">{title}</p>
+    <a href={`/product/${handle}`} class="text-center block py-2 mt-2 border-white border hover:bg-gray-700 transition-colors">View Item</a>
+  </div>
+</div>

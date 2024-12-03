@@ -1,0 +1,62 @@
+---
+import Hero from '../../components/Hero.astro';
+import Layout from '../../layouts/Layout.astro';
+import { getAllProducts, getProductByHandle } from '../../services/shopify/Shopify';
+import { generateProductStaticPaths, getActiveVariant, getCurrencySymbolFromCode } from '../../utilities/commerce';
+
+export async function getStaticPaths() {
+  const allProducts = await getAllProducts();
+  
+  return generateProductStaticPaths(allProducts);
+}
+
+const { handle } = Astro.params;
+
+const product = await getProductByHandle(handle);
+const {
+  title,
+  description,
+  featuredImage,
+  variants
+} = product;
+const activeVariant = getActiveVariant(variants);
+const currencySymbol = getCurrencySymbolFromCode(activeVariant.price.currencyCode);
+---
+<Layout>
+  <Hero>
+    <h1 class="text-4xl">{title}</h1>
+  </Hero>
+  <section class="p-8 flex gap-8 flex-wrap">
+    <div class="BuyingPanel__media max-w-[450px]">
+      <img src={featuredImage.url} alt={featuredImage.altText} class="border-gray-800 border-8" />
+    </div>
+    <div>
+      <p>{description}</p>
+      <p class="text-xl">{currencySymbol}{activeVariant.price.amount}</p>
+      <button class="text-center block px-8 py-2 mt-2 border-gray-800 border hover:bg-gray-200 transition-colors">Add To Cart</button>
+    </div>
+  </section>
+</Layout>
+
+<script define:vars={{product, activeVariant}}>
+  window.dataLayer = window.dataLayer || [];
+
+  window.dataLayer.push('event', 'product_view', {
+    currency: activeVariant.price.currencyCode,
+    value: activeVariant.price.amount,
+    items: [
+      {
+        item_id: product.id,
+        item_name: product.title,
+        item_category: product.productType,
+        item_variant: activeVariant.title,
+        price: activeVariant.price.amount,
+        quantity: 1,
+        currency: activeVariant.price.currencyCode,
+        item_brand: "Test Store",
+        item_image: product.featuredImage.url,
+        tags: product.tags
+      },
+    ]
+  })
+</script>
